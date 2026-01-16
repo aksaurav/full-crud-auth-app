@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const Login = () => {
+// 1. Destructure setUser from props so it updates the Global State in App.jsx
+const Login = ({ setUser }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -17,6 +18,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(""); // Clear previous messages
+
     try {
       const res = await fetch(`http://localhost:5000/api/auth/login`, {
         method: "POST",
@@ -26,20 +29,29 @@ const Login = () => {
         body: JSON.stringify(formData),
       });
 
-      if (res.ok) {
-        const data = await res.json();
+      const data = await res.json();
 
+      if (res.ok) {
+        // 2. Persist data to LocalStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
+        // 3. Update the Global State (This triggers the Navbar change)
         setUser(data.user);
-        setMessage(`Welcome back, ${data.user.firstName}. Ignition successful`);
 
+        setMessage(
+          `Welcome back, ${data.user.firstName}. Ignition successful!`
+        );
+
+        // 4. Navigate home after a short delay
         setTimeout(() => navigate("/"), 2000);
+      } else {
+        // 5. Handle backend errors (e.g., Wrong Password)
+        setMessage(data.message || "Unauthorized: Check your credentials.");
       }
     } catch (error) {
-      console.error(`Signup Error`, error);
-      setMessage(`Communication breakdown with the server`);
+      console.error(`Login Error:`, error);
+      setMessage(`Communication breakdown with the server.`);
     }
   };
 
@@ -51,16 +63,15 @@ const Login = () => {
           autoPlay
           loop
           muted
+          playsInline
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         >
-          {/* Replace with your local video path or a URL */}
           <source
             src="https://cdn.pixabay.com/video/2016/08/24/4788-180289892_large.mp4"
             type="video/mp4"
           />
         </video>
 
-        {/* Overlay Content */}
         <div className="relative z-10 text-center px-10">
           <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 uppercase tracking-widest">
             Cosmos Auth
@@ -82,8 +93,6 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="flex gap-4"></div>
-
             <div>
               <label className="block text-xs font-medium text-blue-400 uppercase mb-1">
                 Email Address
@@ -125,7 +134,9 @@ const Login = () => {
           {message && (
             <p
               className={`mt-4 text-center text-sm ${
-                message.includes("Success") ? "text-green-400" : "text-red-400"
+                message.includes("successful")
+                  ? "text-green-400"
+                  : "text-red-400"
               }`}
             >
               {message}

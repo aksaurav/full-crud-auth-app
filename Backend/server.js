@@ -18,6 +18,10 @@ connectDB();
 import userRoutes from "./Routes/userRoutes.js";
 app.use("/api/auth", userRoutes);
 
+// Mission routes
+import mission from "./Routes/missionRoutes.js";
+app.use("/api/mission", mission);
+
 app.listen(PORT, () => {
   console.log(`Server has started on PORT: ${PORT}`);
 });

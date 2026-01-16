@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react"; // Removed unused useState
+import { useNavigate, Link } from "react-router-dom";
 
-import { Link } from "react-router-dom";
-
-const Navbar = () => {
+const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
 
-  const handleLogOut = () => {
+  // Unified the naming to handleLogout
+  const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    setTimeout(() => navigate("/"), 2000);
+
+    // Redirecting home after clearing state
+    navigate("/");
   };
+
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -26,7 +27,7 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Navigation Links */}
+        {/* Navigation Links - Only show certain links if logged in */}
         <div className="hidden md:flex items-center space-x-10">
           <Link
             to="/"
@@ -34,34 +35,55 @@ const Navbar = () => {
           >
             HOME
           </Link>
-          <Link
-            to="/mission"
-            className="text-sm font-medium text-gray-300 hover:text-blue-400 tracking-widest transition-colors"
-          >
-            MISSION
-          </Link>
-          <Link
-            to="/galaxy"
-            className="text-sm font-medium text-gray-300 hover:text-blue-400 tracking-widest transition-colors"
-          >
-            GALAXY
-          </Link>
+          {user && (
+            <>
+              <Link
+                to="/mission"
+                className="text-sm font-medium text-gray-300 hover:text-blue-400 tracking-widest transition-colors"
+              >
+                CREATE POST
+              </Link>
+              <Link
+                to="/galaxy"
+                className="text-sm font-medium text-gray-300 hover:text-blue-400 tracking-widest transition-colors"
+              >
+                PROFILE
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Auth Buttons */}
         <div className="flex items-center space-x-6">
-          <Link
-            to="/login"
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >
-            LOG IN
-          </Link>
-          <Link
-            to="/signup"
-            className="px-6 py-2 bg-blue-600/20 border border-blue-500/50 text-blue-400 text-sm font-bold rounded-full hover:bg-blue-600 hover:text-white shadow-[0_0_20px_rgba(59,130,246,0.2)] transition-all duration-300 active:scale-95"
-          >
-            LAUNCH
-          </Link>
+          {user ? (
+            <>
+              <span className="hidden sm:block text-gray-300 text-[15px] font-medium tracking-widest uppercase">
+                Commander,{" "}
+                <span className="text-blue-400">{user.firstName}</span>
+              </span>
+              <button
+                onClick={handleLogout} // Name now matches the function above
+                className="px-6 py-2 border border-red-500/40 text-red-400 text-xs font-bold rounded-full hover:bg-red-500 hover:text-white transition-all duration-300 active:scale-95 hover: cursor-pointer"
+              >
+                LOGOUT
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              >
+                LOG IN
+              </Link>
+              <Link
+                to="/signup"
+                className="px-6 py-2 bg-blue-600/20 border border-blue-500/50 text-blue-400 text-sm font-bold rounded-full hover:bg-blue-600 hover:text-white shadow-[0_0_20px_rgba(59,130,246,0.2)] transition-all duration-300"
+              >
+                LAUNCH
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
