@@ -14,7 +14,7 @@ const Hero = () => {
       >
         {/* Using a high-quality direct link for testing */}
         <source
-          src="https://cdn.pixabay.com/video/2023/06/07/166239-834228361_large.mp4"
+          src="https://cdn.pixabay.com/video/2016/08/24/4788-180289892_large.mp4"
           type="video/mp4"
         />
       </video>

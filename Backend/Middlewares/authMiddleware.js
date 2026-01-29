@@ -6,11 +6,9 @@ export const protect = async (req, res, next) => {
 
   try {
     // Check for token in headers
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
+    const authHeader = req.get("Authorization");
+    if (authHeader && authHeader.startsWith("Bearer")) {
+      token = authHeader.split(" ")[1];
     }
 
     if (!token) {

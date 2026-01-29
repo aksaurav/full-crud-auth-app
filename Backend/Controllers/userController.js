@@ -90,3 +90,20 @@ export const handleLogin = async (req, res) => {
       .json({ message: `Error while logging in`, error: error.message });
   }
 };
+
+export const handleGetUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: `Pilot not found in registry` });
+    }
+    res.status(200).json({ message: `Pilot data retrieved` });
+  } catch (error) {
+    console.error("Profile Fetch Error:", error);
+    res
+      .status(500)
+      .json({ message: `Telemetry Failure: Could not reach Pilot` });
+  }
+};

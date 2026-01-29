@@ -38,13 +38,13 @@ const Navbar = ({ user, setUser }) => {
           {user && (
             <>
               <Link
-                to="/mission"
+                to="/dashboard"
                 className="text-sm font-medium text-gray-300 hover:text-blue-400 tracking-widest transition-colors"
               >
-                CREATE POST
+                LAUNCH MISSION
               </Link>
               <Link
-                to="/galaxy"
+                to="/profile"
                 className="text-sm font-medium text-gray-300 hover:text-blue-400 tracking-widest transition-colors"
               >
                 PROFILE

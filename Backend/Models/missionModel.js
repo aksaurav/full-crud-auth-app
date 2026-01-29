@@ -18,7 +18,7 @@ const missionSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Mission = mongoose.model("Mission", missionSchema);

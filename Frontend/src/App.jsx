@@ -4,52 +4,89 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 
-// Import your Pages
+// Pages
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
+import Profile from "./Pages/Profile";
 
-// Import your Components
+// Components
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import MissionControl from "./Components/MissionControl";
+import GalaxyStatus from "./Components/GalaxyStatus";
+import TelemetryFeatures from "./Components/TelemetryFeatures";
 
-// 1. Logic Wrapper (Handles State and Routing Context)
+// New "Crazy" Landing Sections
+import MissionLiveFeed from "./Components/MissionLiveFeed";
+import TechArchitecture from "./Components/TechArchitecture";
+import FinalCTA from "./Components/FinalCTA";
+
 const AppContent = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  // Persistence: Keep user logged in on refresh
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
+    setLoading(false);
   }, []);
 
-  const hideLayout =
+  const isAuthPage =
     location.pathname === "/login" || location.pathname === "/signup";
 
+  if (loading) return null;
+
   return (
-    <>
-      {!hideLayout && <Navbar user={user} setUser={setUser} />}
+    <div className="min-h-screen w-full text-white selection:bg-blue-500/30 bg-[#020617]">
+      {/* 1. NAVIGATION */}
+      {!isAuthPage && <Navbar user={user} setUser={setUser} />}
 
-      <Routes>
-        <Route path="/" element={<Home user={user} />} />
+      {/* 2. MAIN CONTENT AREA */}
+      <main>
+        <Routes>
+          {/* HOME PAGE: The complete cinematic sequence */}
+          <Route
+            path="/"
+            element={
+              <div className="flex flex-col">
+                <Home user={user} />
+                <GalaxyStatus />
+                <TelemetryFeatures />
 
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/signup" element={<Signup setUser={setUser} />} />
-        <Route path="/dashboard" element={<MissionControl />} />
-      </Routes>
+                <MissionLiveFeed />
+                <TechArchitecture />
+                <FinalCTA />
+              </div>
+            }
+          />
 
-      {!hideLayout && <Footer />}
-    </>
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/signup" element={<Signup setUser={setUser} />} />
+
+          <Route
+            path="/dashboard"
+            element={user ? <MissionControl /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/profile"
+            element={user ? <Profile user={user} /> : <Navigate to="/login" />}
+          />
+        </Routes>
+      </main>
+
+      {/* 3. FOOTER */}
+      {!isAuthPage && <Footer />}
+    </div>
   );
 };
 
-// 2. THE MAIN APP FUNCTION (Missing previously)
 const App = () => {
   return (
     <Router>
@@ -58,5 +95,4 @@ const App = () => {
   );
 };
 
-// 3. THE DEFAULT EXPORT (The fix for your SyntaxError)
 export default App;
