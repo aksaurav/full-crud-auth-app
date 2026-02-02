@@ -12,6 +12,7 @@ import {
   Activity,
   Zap,
 } from "lucide-react";
+import { baseUrl } from "../Url";
 
 const MissionControl = () => {
   const [title, setTitle] = useState("");
@@ -31,7 +32,7 @@ const MissionControl = () => {
   const fetchMission = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/mission`, {
+      const response = await fetch(`${baseUrl}/api/mission`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -52,7 +53,7 @@ const MissionControl = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/mission/launch", {
+      const response = await fetch(`${baseUrl}/mission/launch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,17 +81,14 @@ const MissionControl = () => {
     console.log(`Initiating update for ID: `, id);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:5000/api/mission/update/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ title: editTitle, description: editDesc }),
+      const response = await fetch(`${baseUrl}/api/mission/update/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify({ title: editTitle, description: editDesc }),
+      });
 
       if (response.ok) {
         setIsEditing(null); // Close the edit UI
@@ -108,13 +106,10 @@ const MissionControl = () => {
     if (!window.confirm("Abort mission?")) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:5000/api/mission/abort/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await fetch(`${baseUrl}/api/mission/abort/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
       body: JSON.stringify({
         title: deletedTitle,
         description: deletedDescription,

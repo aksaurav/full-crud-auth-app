@@ -9,6 +9,7 @@ import {
   Activity,
   Zap,
 } from "lucide-react";
+import { baseUrl } from "../Url";
 
 const Profile = ({ user }) => {
   const [pilot, setPilot] = useState(user);
@@ -19,19 +20,16 @@ const Profile = ({ user }) => {
     const getInitialData = async () => {
       const token = localStorage.getItem("token");
       try {
-        const statsRes = await fetch("http://localhost:5000/api/mission", {
+        const statsRes = await fetch(`${baseUrl}/api/mission`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const statsData = await statsRes.json();
         if (statsRes.ok) setStats({ total: statsData.length });
 
         if (user?._id) {
-          const pilotRes = await fetch(
-            `http://localhost:5000/api/users/${user._id}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            },
-          );
+          const pilotRes = await fetch(`${baseUrl}/api/users/${user._id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           const pilotData = await pilotRes.json();
           if (pilotRes.ok) setPilot(pilotData.user);
         }

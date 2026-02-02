@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { baseUrl } from "../Url";
 
 // 1. Destructure setUser from props so it updates the Global State in App.jsx
 const Login = ({ setUser }) => {
@@ -21,7 +22,7 @@ const Login = ({ setUser }) => {
     setMessage(""); // Clear previous messages
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/login`, {
+      const res = await fetch(`${baseUrl}api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +41,7 @@ const Login = ({ setUser }) => {
         setUser(data.user);
 
         setMessage(
-          `Welcome back, ${data.user.firstName}. Ignition successful!`
+          `Welcome back, ${data.user.firstName}. Ignition successful!`,
         );
 
         // 4. Navigate home after a short delay

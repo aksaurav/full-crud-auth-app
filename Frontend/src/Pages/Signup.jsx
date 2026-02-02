@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { baseUrl } from "../Url";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ const Signup = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
+      const res = await fetch(`${baseUrl}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +50,7 @@ const Signup = () => {
 
       if (res.ok) {
         setMessage(
-          `Welcome aboard, ${data.user.firstName}! Ignition successful.`
+          `Welcome aboard, ${data.user.firstName}! Ignition successful.`,
         );
         // Wait 2 seconds so they can see the success message before redirecting
         setTimeout(() => navigate("/login"), 2000);
