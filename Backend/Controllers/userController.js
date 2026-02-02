@@ -1,5 +1,6 @@
 import User from "../Models/userModel.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 export const handleSignUp = async (req, res) => {
   try {
@@ -23,8 +24,21 @@ export const handleSignUp = async (req, res) => {
       return res.status(409).json({ message: `Email already in use` });
     }
 
+    // Generate email verification token
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+
+    const emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000;
+
     // Create user
-    const user = await User.create({ firstName, lastName, email, password });
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      password,
+      emailVerificationToken,
+      emailVerificationExpires,
+      isVerified: false,
+    });
 
     // Generate Token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {

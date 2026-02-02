@@ -17,13 +17,19 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       required: true,
       minlength: 8,
     },
+    emailVerificationToken: String,
+    emailVerificationExpires: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Hash the password before saving
