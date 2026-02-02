@@ -7,22 +7,25 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 const allowedOrigins = [
-  `http://localhost:5173`,
-  `https://full-crud-auth-dc2c33554-aksauravs-projects.vercel.app`,
-  `https://mern-crud-auth-app.onrender.com`,
+  "http://localhost:5173",
+  "https://mern-crud-auth-app.onrender.com",
+  "https://full-crud-auth-aksauravs-projects.vercel.app", // Your main production Vercel URL
 ];
 
-// Middlewares
 app.use(
   cors({
     origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg =
-          "The CORS policy for this site does not allow access from the specified Origin.";
-        return callback(new Error(msg), false);
+
+      // Check if the origin is in the whitelist OR is a Vercel preview URL
+      const isVercelPreview = origin.endsWith(".vercel.app");
+
+      if (allowedOrigins.indexOf(origin) !== -1 || isVercelPreview) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS policy blocked this origin."), false);
       }
-      return callback(null, true);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
