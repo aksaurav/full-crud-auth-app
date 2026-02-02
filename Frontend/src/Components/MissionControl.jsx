@@ -53,7 +53,7 @@ const MissionControl = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${baseUrl}/mission/launch`, {
+      const response = await fetch(`${baseUrl}/api/mission/launch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

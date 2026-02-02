@@ -22,7 +22,7 @@ const Login = ({ setUser }) => {
     setMessage(""); // Clear previous messages
 
     try {
-      const res = await fetch(`${baseUrl}api/auth/login`, {
+      const res = await fetch(`${baseUrl}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

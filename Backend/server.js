@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 8000;
 
 const allowedOrigins = [
   `http://localhost:5173`,
+  `https://full-crud-auth-dc2c33554-aksauravs-projects.vercel.app`,
   `https://mern-crud-auth-app.onrender.com`,
 ];
 
