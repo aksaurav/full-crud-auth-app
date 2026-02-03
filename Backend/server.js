@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 8000;
 const allowedOrigins = [
   "http://localhost:5173",
   "https://mern-crud-auth-app.onrender.com",
-  "https://full-crud-auth-aksauravs-projects.vercel.app", // Your main production Vercel URL
+  "https://full-crud-auth-aksauravs-projects.vercel.app",
+  "https://full-crud-auth.vercel.app",
 ];
 
 app.use(
