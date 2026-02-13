@@ -31,21 +31,20 @@ const PROJECT_CONTEXT = `
 
 export const handlePortfolioChat = async (req, res) => {
   const { question } = req.body;
+
+  // Safety Check
   if (!process.env.OPEN_ROUTER_API) {
-    console.error(
-      "CRITICAL: OPEN_ROUTER_API is not defined in environment variables.",
-    );
     return res
       .status(500)
-      .json({ error: "Server Configuration Error: Missing API Key" });
+      .json({ error: "Missing API Configuration on Render." });
   }
 
   try {
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        // Using the high-speed Gemini Flash 8B Free model
-        model: "google/gemini-flash-1.5-8b:free",
+        // SWITCHED TO MISTRAL (Generic Open Source Model)
+        model: "mistralai/mistral-7b-instruct:free",
         messages: [
           { role: "system", content: PROJECT_CONTEXT },
           { role: "user", content: question },
@@ -55,20 +54,17 @@ export const handlePortfolioChat = async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.OPEN_ROUTER_API}`,
           "Content-Type": "application/json",
-          // OpenRouter sometimes requires these for free models
-          "HTTP-Referer":
-            "https://full-crud-auth-1mpaj3rvl-aksauravs-projects.vercel.app",
-          "X-Title": "Saurav Portfolio",
+          // Use a generic Referer to avoid deployment URL breaks
+          "HTTP-Referer": "https://vercel.com",
+          "X-Title": "Saurav Portfolio AI",
         },
       },
     );
-
     const reply = response.data.choices[0].message.content;
     res.json({ reply });
   } catch (error) {
+    // This will print the specific error in your Render logs
     console.error("OpenRouter Error:", error.response?.data || error.message);
-    res
-      .status(500)
-      .json({ error: "Mission Control lost contact with the AI." });
+    res.status(500).json({ error: "Mission Control AI is currently offline." });
   }
 };
