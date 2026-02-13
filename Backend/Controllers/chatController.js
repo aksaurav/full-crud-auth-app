@@ -1,4 +1,3 @@
-import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -40,7 +39,7 @@ export const handlePortfolioChat = async (req, res) => {
   }
 
   try {
-    const response = await axios.post(
+    const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         // SWITCHED TO MISTRAL (Generic Open Source Model)
