@@ -7,23 +7,8 @@ import {
   Navigate,
 } from "react-router-dom";
 
-// Pages
-import Home from "./Pages/Home";
-import Login from "./Pages/Login";
-import Signup from "./Pages/Signup";
-import Profile from "./Pages/Profile";
-
-// Components
-import Navbar from "./Components/Navbar";
-import Footer from "./Components/Footer";
-import MissionControl from "./Components/MissionControl";
-import GalaxyStatus from "./Components/GalaxyStatus";
-import TelemetryFeatures from "./Components/TelemetryFeatures";
-
-// New "Crazy" Landing Sections
-import MissionLiveFeed from "./Components/MissionLiveFeed";
-import TechArchitecture from "./Components/TechArchitecture";
-import FinalCTA from "./Components/FinalCTA";
+// ... (Your other imports stay the same)
+import AstroChat from "./Components/AstroChat"; // <-- ADD THIS IMPORT
 
 const AppContent = () => {
   const [user, setUser] = useState(null);
@@ -44,14 +29,13 @@ const AppContent = () => {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen w-full text-white selection:bg-blue-500/30 bg-[#020617]">
+    <div className="min-h-screen w-full text-white selection:bg-blue-500/30 bg-[#020617] relative">
       {/* 1. NAVIGATION */}
       {!isAuthPage && <Navbar user={user} setUser={setUser} />}
 
       {/* 2. MAIN CONTENT AREA */}
       <main>
         <Routes>
-          {/* HOME PAGE: The complete cinematic sequence */}
           <Route
             path="/"
             element={
@@ -59,7 +43,6 @@ const AppContent = () => {
                 <Home user={user} />
                 <GalaxyStatus />
                 <TelemetryFeatures />
-
                 <MissionLiveFeed />
                 <TechArchitecture />
                 <FinalCTA />
@@ -83,6 +66,10 @@ const AppContent = () => {
 
       {/* 3. FOOTER */}
       {!isAuthPage && <Footer />}
+
+      {/* 4. AI CHATBOT (COMM-LINK) */}
+      {/* This only shows if NOT on login/signup page */}
+      {!isAuthPage && <AstroChat />}
     </div>
   );
 };
