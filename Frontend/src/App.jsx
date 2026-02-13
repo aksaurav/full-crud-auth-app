@@ -7,8 +7,26 @@ import {
   Navigate,
 } from "react-router-dom";
 
-// ... (Your other imports stay the same)
-import AstroChat from "./Components/AstroChat"; // <-- ADD THIS IMPORT
+// Pages
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
+import Profile from "./Pages/Profile";
+
+// Components
+import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer";
+import MissionControl from "./Components/MissionControl";
+import GalaxyStatus from "./Components/GalaxyStatus";
+import TelemetryFeatures from "./Components/TelemetryFeatures";
+
+// New Landing Sections
+import MissionLiveFeed from "./Components/MissionLiveFeed";
+import TechArchitecture from "./Components/TechArchitecture";
+import FinalCTA from "./Components/FinalCTA";
+
+// AI Chatbot Component
+import AstroChat from "./Components/AstroChat";
 
 const AppContent = () => {
   const [user, setUser] = useState(null);
@@ -23,6 +41,7 @@ const AppContent = () => {
     setLoading(false);
   }, []);
 
+  // Logical check for Auth Pages
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/signup";
 
@@ -30,12 +49,13 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen w-full text-white selection:bg-blue-500/30 bg-[#020617] relative">
-      {/* 1. NAVIGATION */}
+      {/* 1. NAVIGATION - Hidden on Login/Signup */}
       {!isAuthPage && <Navbar user={user} setUser={setUser} />}
 
       {/* 2. MAIN CONTENT AREA */}
       <main>
         <Routes>
+          {/* HOME PAGE: Cinematic sequence */}
           <Route
             path="/"
             element={
@@ -53,6 +73,7 @@ const AppContent = () => {
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/signup" element={<Signup setUser={setUser} />} />
 
+          {/* PROTECTED ROUTES */}
           <Route
             path="/dashboard"
             element={user ? <MissionControl /> : <Navigate to="/login" />}
@@ -64,11 +85,10 @@ const AppContent = () => {
         </Routes>
       </main>
 
-      {/* 3. FOOTER */}
+      {/* 3. FOOTER - Hidden on Login/Signup */}
       {!isAuthPage && <Footer />}
 
-      {/* 4. AI CHATBOT (COMM-LINK) */}
-      {/* This only shows if NOT on login/signup page */}
+      {/* 4. AI CHATBOT - Visible everywhere except Auth Pages */}
       {!isAuthPage && <AstroChat />}
     </div>
   );
