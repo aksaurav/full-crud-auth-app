@@ -34,18 +34,23 @@ export const handlePortfolioChat = async (req, res) => {
 
   try {
     const response = await axios.post(
-      `https://openrouter.ai/api/v1/chat/completions`,
+      "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: `minimax/minimax-m2.5`,
-        message: [
+        // Using the high-speed Gemini Flash 8B Free model
+        model: "google/gemini-flash-1.5-8b:free",
+        messages: [
           { role: "system", content: PROJECT_CONTEXT },
           { role: "user", content: question },
         ],
       },
       {
         headers: {
-          Authorization: `Bearer${process.env.OPEN_ROUTER_API}`,
+          Authorization: `Bearer ${process.env.OPEN_ROUTER_API}`,
           "Content-Type": "application/json",
+          // OpenRouter sometimes requires these for free models
+          "HTTP-Referer":
+            "https://full-crud-auth-1mpaj3rvl-aksauravs-projects.vercel.app",
+          "X-Title": "Saurav Portfolio",
         },
       },
     );
@@ -53,7 +58,9 @@ export const handlePortfolioChat = async (req, res) => {
     const reply = response.data.choices[0].message.content;
     res.json({ reply });
   } catch (error) {
-    console.error("Chat Error:", error);
-    res.status(500).json({ error: "I'm having trouble thinking right now." });
+    console.error("OpenRouter Error:", error.response?.data || error.message);
+    res
+      .status(500)
+      .json({ error: "Mission Control lost contact with the AI." });
   }
 };
