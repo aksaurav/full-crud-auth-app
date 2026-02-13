@@ -31,6 +31,14 @@ const PROJECT_CONTEXT = `
 
 export const handlePortfolioChat = async (req, res) => {
   const { question } = req.body;
+  if (!process.env.OPEN_ROUTER_API) {
+    console.error(
+      "CRITICAL: OPEN_ROUTER_API is not defined in environment variables.",
+    );
+    return res
+      .status(500)
+      .json({ error: "Server Configuration Error: Missing API Key" });
+  }
 
   try {
     const response = await axios.post(
