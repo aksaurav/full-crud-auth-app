@@ -44,7 +44,7 @@ export const handlePortfolioChat = async (req, res) => {
       "https://openrouter.ai/api/v1/chat/completions",
       {
         // SWITCHED TO MISTRAL (Generic Open Source Model)
-        model: "mistralai/mistral-7b-instruct:free",
+        model: "mistralai/mistral-7b-instruct",
         messages: [
           { role: "system", content: PROJECT_CONTEXT },
           { role: "user", content: question },
