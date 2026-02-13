@@ -15,7 +15,9 @@ const AstroChat = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMsg = { role: "user", content: input };
+    const question = input; // store before clearing
+    const userMsg = { role: "user", content: question };
+
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
@@ -23,19 +25,25 @@ const AstroChat = () => {
       const res = await fetch(`${baseUrl}/api/chat/ask-me`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: input }),
+        body: JSON.stringify({ question }),
       });
+
+      if (!res.ok) throw new Error("Server error");
+
       const data = await res.json();
+
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.reply },
       ]);
     } catch (err) {
+      console.error("CHAT ERROR:", err);
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: "Signal lost. Check backend connection.",
+          content:
+            "⚠️ Unable to reach Mission Control. Backend may be waking up (Render cold start). Try again in a few seconds.",
         },
       ]);
     }
@@ -85,7 +93,7 @@ const AstroChat = () => {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSend()}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder="Type query..."
                 className="bg-transparent border border-blue-500/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-400 w-full"
               />

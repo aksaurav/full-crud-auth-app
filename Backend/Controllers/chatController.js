@@ -1,48 +1,33 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-// 1. The knowledge base
-const PROJECT_CONTEXT = `
-  You are the AI Assistant for Saurav's Portfolio Project called "Mission Control".
-  
-  ABOUT THE CREATOR (Saurav):
-  - Role: Full Stack Developer & Property Preservation Specialist.
-  - Skills: MERN Stack (MongoDB, Express, React, Node.js), Secure Authentication, API Deployment.
-  - Focus: Building scalable, secure web applications with real-world utility.
-  
-  ABOUT THIS PROJECT (Mission Control - CRUD & Auth System):
-  - Purpose: A production-grade User Management System designed to handle secure authentication and data operations.
-  - Tech Stack: 
-      * Frontend: React (Vite) + Tailwind CSS + Framer Motion.
-      * Backend: Node.js + Express.
-      * Database: MongoDB (Atlas).
-  - Key Features:
-      * Secure Authentication: Implemented JSON Web Tokens (JWT) and HTTP-only cookies for session management.
-      * Security: Uses 'bcryptjs' for password hashing and 'dotenv' for environment variable protection.
-      * Architecture: RESTful API design with a stateless backend architecture.
-      * Deployment: Solved complex Cross-Origin Resource Sharing (CORS) challenges to link Vercel (Frontend) with Render (Backend).
-  
-  YOUR GOAL:
-  Answer questions about how Saurav built this.
-  If asked about challenges, mention the CORS configuration and Render's "Cold Start" issues that Saurav optimized.
-  Be professional, concise, and act as a technical advocate for Saurav.
-`;
+import axios from "axios";
 
 export const handlePortfolioChat = async (req, res) => {
-  const { question } = req.body;
-
-  // Safety Check
-  if (!process.env.OPEN_ROUTER_API) {
-    return res
-      .status(500)
-      .json({ error: "Missing API Configuration on Render." });
-  }
-
   try {
-    const response = await fetch(
+    const { question } = req.body;
+
+    if (!question) {
+      return res.status(400).json({ error: "Question is required" });
+    }
+
+    if (!process.env.OPEN_ROUTER_API) {
+      return res.status(500).json({ error: "Missing OpenRouter API key" });
+    }
+
+    const PROJECT_CONTEXT = `
+You are Saurav's AI assistant.
+
+Answer questions about his MERN project called Mission Control.
+
+Mention:
+• JWT authentication
+• HTTP-only cookies
+• MongoDB Atlas
+• CORS + Render cold start challenges
+Be concise and professional.
+`;
+
+    const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        // SWITCHED TO MISTRAL (Generic Open Source Model)
         model: "mistralai/mistral-7b-instruct",
         messages: [
           { role: "system", content: PROJECT_CONTEXT },
@@ -53,18 +38,20 @@ export const handlePortfolioChat = async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.OPEN_ROUTER_API}`,
           "Content-Type": "application/json",
-          // Use a generic Referer to avoid deployment URL breaks
-          "HTTP-Referer":
-            "https://full-crud-auth-1mpaj3rvl-aksauravs-projects.vercel.app",
-          "X-Title": "Saurav Portfolio AI",
+          "HTTP-Referer": "https://full-crud-auth.vercel.app",
+          "X-Title": "Portfolio AI",
         },
       },
     );
+
     const reply = response.data.choices[0].message.content;
+
     res.json({ reply });
   } catch (error) {
-    // This will print the specific error in your Render logs
-    console.error("OpenRouter Error:", error.response?.data || error.message);
-    res.status(500).json({ error: "Mission Control AI is currently offline." });
+    console.error(
+      "❌ OpenRouter Error:",
+      error.response?.data || error.message,
+    );
+    res.status(500).json({ error: "AI is currently offline" });
   }
 };
