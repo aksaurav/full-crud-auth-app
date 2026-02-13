@@ -47,6 +47,10 @@ app.use("/api/auth", userRoutes);
 import mission from "./Routes/missionRoutes.js";
 app.use("/api/mission", mission);
 
+// Chat Route
+import chatBot from "./Routes/chat.js";
+app.use("/api/chat", chatBot);
+
 app.listen(PORT, () => {
   console.log(`Server has started on PORT: ${PORT}`);
 });
