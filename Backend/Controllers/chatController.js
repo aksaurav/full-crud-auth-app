@@ -55,7 +55,8 @@ export const handlePortfolioChat = async (req, res) => {
           Authorization: `Bearer ${process.env.OPEN_ROUTER_API}`,
           "Content-Type": "application/json",
           // Use a generic Referer to avoid deployment URL breaks
-          "HTTP-Referer": "https://vercel.com",
+          "HTTP-Referer":
+            "https://full-crud-auth-1mpaj3rvl-aksauravs-projects.vercel.app",
           "X-Title": "Saurav Portfolio AI",
         },
       },
