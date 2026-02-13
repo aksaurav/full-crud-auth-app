@@ -36,7 +36,7 @@ export const handlePortfolioChat = async (req, res) => {
     const response = await axios.post(
       `https://openrouter.ai/api/v1/chat/completions`,
       {
-        model: `google/gemini-flash-1.5`,
+        model: `minimax/minimax-m2.5`,
         message: [
           { role: "system", content: PROJECT_CONTEXT },
           { role: "user", content: question },
@@ -44,7 +44,7 @@ export const handlePortfolioChat = async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer${process.env.GEMINI_KEY}`,
+          Authorization: `Bearer${process.env.OPEN_ROUTER_API}`,
           "Content-Type": "application/json",
         },
       },

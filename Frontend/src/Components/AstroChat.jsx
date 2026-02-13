@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { baseUrl } from "../Url";
 const AstroChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -20,7 +20,7 @@ const AstroChat = () => {
     setInput("");
 
     try {
-      const res = await fetch("YOUR_BACKEND_URL/api/chat/ask-me", {
+      const res = await fetch(`${baseUrl}/api/chat/ask-me`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: input }),
