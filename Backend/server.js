@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 console.log("🚀 Server starting...");
-console.log("API KEY EXISTS?", !!process.env.OPEN_ROUTER_API);
+console.log("API KEY EXISTS?", !!process.env.GROQ_API_KEY);
 
 // =============================
 // 1️⃣ CORS CONFIG (FIXED)
