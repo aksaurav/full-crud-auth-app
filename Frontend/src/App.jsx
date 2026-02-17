@@ -41,19 +41,21 @@ const AppContent = () => {
     setLoading(false);
   }, []);
 
+  // Normalize pathname to prevent trailing slash issues
+  const currentPath = location.pathname.replace(/\/$/, "") || "/";
+
   // Logical check for Auth Pages
-  const isAuthPage =
-    location.pathname === "/login" || location.pathname === "/signup";
+  const isAuthPage = currentPath === "/login" || currentPath === "/signup";
 
   if (loading) return null;
 
   return (
-    <div className="min-h-screen w-full text-white selection:bg-blue-500/30 bg-[#020617] relative">
+    <div className="min-h-screen w-full text-white selection:bg-blue-500/30 bg-[#020617] relative overflow-x-hidden">
       {/* 1. NAVIGATION - Hidden on Login/Signup */}
       {!isAuthPage && <Navbar user={user} setUser={setUser} />}
 
       {/* 2. MAIN CONTENT AREA */}
-      <main>
+      <main className="relative z-10">
         <Routes>
           {/* HOME PAGE: Cinematic sequence */}
           <Route
@@ -82,14 +84,24 @@ const AppContent = () => {
             path="/profile"
             element={user ? <Profile user={user} /> : <Navigate to="/login" />}
           />
+
+          {/* FALLBACK: Redirect any unknown routes to Home */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
 
       {/* 3. FOOTER - Hidden on Login/Signup */}
       {!isAuthPage && <Footer />}
 
-      {/* 4. AI CHATBOT - Visible everywhere except Auth Pages */}
-      {!isAuthPage && <AstroChat />}
+      {/* 4. AI CHATBOT - Fixed UI Layer */}
+      {/* We keep this outside <main> to ensure it stays fixed 
+          relative to the viewport, not the scrolling content.
+      */}
+      {!isAuthPage && (
+        <div className="fixed bottom-0 right-0 z-[999]">
+          <AstroChat />
+        </div>
+      )}
     </div>
   );
 };
