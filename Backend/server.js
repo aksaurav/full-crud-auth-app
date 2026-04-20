@@ -15,7 +15,7 @@ console.log("API KEY EXISTS?", !!process.env.GROQ_API_KEY);
 // =============================
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://127.0.0.1:5173", // ⭐ IMPORTANT (Vite sometimes uses this)
+  "http://127.0.0.1:5173",
   "https://mern-crud-auth-app.onrender.com",
   "https://full-crud-auth-aksauravs-projects.vercel.app",
   "https://full-crud-auth.vercel.app",
